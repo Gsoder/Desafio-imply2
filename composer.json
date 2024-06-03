@@ -1,0 +1,20 @@
+{
+    "name": "imply/desafio-imply2",
+    "description": "Desafio 2 imply",
+    "type": "project",  
+    "require": {
+        "mpdf/mpdf": "^5.7",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Imply\\DesafioImply2\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "GSoder",
+            "email": "gabzamsoder@gmail.com"
+        }
+    ]
+}
