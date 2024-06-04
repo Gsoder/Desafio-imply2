@@ -11,17 +11,17 @@ class getWeatherClass
         $this->apiKey = $apiKey;
     }
 
-    public function getCoordinates($estado, $cidade)
+    public function getWeather($cidade)
     {
         $curl = curl_init();
 
-        $url = "https://api.opencagedata.com/geocode/v1/json?q=" . urlencode($cidade . ', ' . $estado) . "&key=" . $this->apiKey;
+        $url = "https://api.openweathermap.org/data/2.5/weather?q=" . urlencode($cidade) . "&appid=" . $this->apiKey . "&lang=pt_br&units=metric";
 
         curl_setopt_array($curl, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true, // Seguir redirecionamentos, se houver
-            CURLOPT_SSL_VERIFYPEER => false, // Desabilitar a verificação do certificado SSL
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
         ]);
 
         $response = curl_exec($curl);
@@ -41,14 +41,8 @@ class getWeatherClass
 
         $data = json_decode($response, true);
 
-        if ($data && isset($data['results']) && !empty($data['results'])) {
-            $firstResult = $data['results'][0];
-            $latitude = $firstResult['geometry']['lat'];
-            $longitude = $firstResult['geometry']['lng'];
+        return $data;
 
-            return ['latitude' => $latitude, 'longitude' => $longitude];
-        } else {
-            return null;
-        }
+        
     }
 }

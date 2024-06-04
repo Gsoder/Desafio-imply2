@@ -3,8 +3,7 @@
     "description": "Desafio 2 imply",
     "type": "project",  
     "require": {
-        "mpdf/mpdf": "^5.7",
-        "phpmailer/phpmailer": "^6.9"
+        "mpdf/mpdf": "^5.7"
     },
     "autoload": {
         "psr-4": {
