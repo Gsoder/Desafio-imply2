@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - /home/imply/Área de Trabalho/Desafio-imply2:/var/www/html
+      - /home/gsoder/Desktop/Desafio-imply2:/var/www/html
     depends_on:
       - db
     command: bash -c "docker-php-ext-install pdo pdo_mysql mysqli && a2enmod rewrite && apache2-foreground"

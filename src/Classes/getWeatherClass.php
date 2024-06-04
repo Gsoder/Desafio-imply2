@@ -4,36 +4,51 @@ namespace Imply\DesafioImply2\Classes;
 
 class getWeatherClass
 {
-    private string $url;
-    private float $lat;
-    private float $lon;
-    public function __construct(string $url, float $lat, float $lon){
-        $this->url = $url;
-        $this->lat = $lat;
-        $this->lon = $lon;
+    private $apiKey;
+
+    public function __construct($apiKey)
+    {
+        $this->apiKey = $apiKey;
     }
 
-    public function getWeather(){
-
+    public function getCoordinates($estado, $cidade)
+    {
         $curl = curl_init();
 
+        $url = "https://api.opencagedata.com/geocode/v1/json?q=" . urlencode($cidade . ', ' . $estado) . "&key=" . $this->apiKey;
 
-        $url = "https://api.openweathermap.org/data/2.5/weather?lat=$this->lat&lon=$this->lon&appid=$this->url";
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true, // Seguir redirecionamentos, se houver
+            CURLOPT_SSL_VERIFYPEER => false, // Desabilitar a verificação do certificado SSL
+        ]);
 
+        $response = curl_exec($curl);
 
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        if ($response === false) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            throw new \Exception("cURL Error: $error");
+        }
 
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
 
-        
-        return curl_exec($curl);
+        if ($httpCode !== 200) {
+            throw new \Exception("API Request Failed with HTTP Code $httpCode");
+        }
 
+        $data = json_decode($response, true);
 
+        if ($data && isset($data['results']) && !empty($data['results'])) {
+            $firstResult = $data['results'][0];
+            $latitude = $firstResult['geometry']['lat'];
+            $longitude = $firstResult['geometry']['lng'];
+
+            return ['latitude' => $latitude, 'longitude' => $longitude];
+        } else {
+            return null;
+        }
     }
-
-
-
-    
-
-
 }

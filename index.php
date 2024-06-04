@@ -29,16 +29,14 @@ if(!$mail->send()) {
     echo 'Erro: ' . $mail->ErrorInfo;
 } else {
     echo 'Mensagem enviada.';
-}*/
+}
 
 
-require 'src/Classes/getWeatherClass.php';
+$test = new getWeatherClass('63ebc0939705091b3565c449a4c6f266');
+$response = $test->getWeather(-29.7131, -52.4316);
 
-$test = new getWeatherClass('63ebc0939705091b3565c449a4c6f266', -29.7131, -52.4316);
-$response = $test->getWeather();
-
-echo $response;
-
+echo var_dump($response['coord']['lon']);
+*/
 ?>
 
 
@@ -50,33 +48,32 @@ echo $response;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desafio dois php OO</title>
     <link rel="stylesheet" type="text/css" href="/node_modules/bootstrap/dist//css//bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/src/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/www/styles/index.css">
+	
 </head>
 <body>
 
 <section class="ftco-section">
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-lg-10 col-md-12">
-					<div class="wrapper">
-						<div class="row no-gutters">
+		<div class="row container" style="margin: auto;">
+						
 							<div class="col-md-7 d-flex align-items-stretch">
 								<div class="contact-wrap w-100 p-md-5 p-4">
-									<h3 class="mb-4">Get in touch</h3>
-									<div id="form-message-warning" class="mb-4"></div> 
-				      		<div id="form-message-success" class="mb-4">
-				            Your message was sent, thank you!
-				      		</div>
-									<form method="POST" id="contactForm" name="contactForm">
+									<h3 class="mb-4">Descubra o clima</h3>
+									<form method="POST" id="getClima" name="getClima">
 										<div class="row">
 											<div class="col-md-6">
 												<div class="form-group">
-													<input type="text" class="form-control" name="name" id="name" placeholder="Name">
+													<select class="form-select form-select-lg mb-3" aria-label="Large select example" id="estados" onchange="popularCidades()">
+														<option value="">Selecione um estado</option>
+													</select>
 												</div>
 											</div>
 											<div class="col-md-6"> 
 												<div class="form-group">
-													<input type="email" class="form-control" name="email" id="email" placeholder="Email">
+													<select class="form-select form-select-lg mb-3" aria-label="Large select example" id="cidades">
+														<option value="">Selecione um estado</option>
+													</select>
+												</div>
 												</div>
 											</div>
 											<div class="col-md-12">
@@ -98,7 +95,7 @@ echo $response;
 										</div>
 									</form>
 								</div>
-							</div>
+					
 							<div class="col-md-5 d-flex align-items-stretch">
 								<div class="info-wrap bg-primary w-100 p-lg-5 p-4">
 									<h3 class="mb-4 mt-md-4">Contact us</h3>
@@ -137,9 +134,6 @@ echo $response;
 					          </div>
 				          </div>
 			          </div>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -147,5 +141,6 @@ echo $response;
 </body>
     <script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/www/js/index.js"></script>
 </html>
 
