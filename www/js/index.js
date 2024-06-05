@@ -9,20 +9,47 @@ $(document).ready(function () {
   $('#getClima').submit(function (event) {
     event.preventDefault();
 
-    var formData = $(this).serialize();
+
+    var cidade = $('#cidades').val();
+
+
+    if (!cidade) {
+      console.error('Por favor, selecione uma cidade.');
+      return;
+    }
+
+
+    var formData = {
+      cidade: cidade
+    };
+
+    console.log(formData);
 
     $.ajax({
       type: 'POST',
-      url: '../src/Controller/mainController.php/handleRequest?action=getWeather',
+      url: 'http://localhost:8080/index.php?action=getWeather',
       data: formData,
       success: function (response) {
-        console.log(response);
+
+        $('#velocidadeVento').text(response.wind.speed + " ");
+
+        $('#tempMin').text(response.main.temp_min + " ");
+        $('#tempMax').text(response.main.temp_max + " ");
+
+        $('#tempAtual').text(response.main.temp + " ");
+        $('#umidadeAtual').text(response.main.humidity + " ");
+
       },
-      error: function () {
-        console.log('Erro ao enviar a mensagem. Por favor, tente novamente.');
+      error: function (xhr, status, error) {
+        console.error('Erro ao enviar a mensagem: ', status, error);
+        console.error('Resposta do servidor: ', xhr.responseText);
       }
     });
   });
+
+
+
+
 
 });
 
@@ -77,14 +104,10 @@ function getCidade(data) {
 }
 
 function trocarDisplayEmail() {
-  if ($('#emailTxt').css('display') == 'none') {
-    console.log("test");
-    $(this).css({
-      display: flex
-    })
-
+  var emailTxt = $('#emailTxt');
+  if ($('#flexCheckDefault').is(':checked')) {
+    emailTxt.css('display', 'block');
   } else {
-    $(this).addClass('form-control');
+    emailTxt.css('display', 'none');
   }
-
 }

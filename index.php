@@ -1,14 +1,11 @@
 <?php
 
-use Imply\DesafioImply2\Classes\getWeatherClass;
+use Imply\DesafioImply2\Controller\mainController;
 
 require 'vendor/autoload.php';
 
-
-
-$test = new getWeatherClass("63ebc0939705091b3565c449a4c6f266");
-$weatherData = $test->getWeather("Santa cruz do sul");
-echo var_dump($weatherData['weather'][0]['main']);
+$controller = new mainController();
+$controller->handleRequest();
 
 
 ?>
@@ -103,7 +100,7 @@ echo var_dump($weatherData['weather'][0]['main']);
                             </svg>
                         </div>
                         <div class="text pl-3">
-                            <p><span class="title">Vento: </span><span class="title"><?=$weatherData['wind']['speed']?>
+                            <p><span class="title">Vento: </span><span class="title" id="velocidadeVento">
                                 </span>Kilometros por
                                 hora
                             </p>
@@ -111,56 +108,24 @@ echo var_dump($weatherData['weather'][0]['main']);
                     </div>
                     <div class="dbox w-100 d-flex align-items-center">
                         <div class="icon d-flex align-items-center justify-content-center">
-                            <svg width="800px" height="800px" viewBox="0 0 32 32" enable-background="new 0 0 32 32"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Layer_2" />
-                                <g id="Layer_3">
+                            <svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+
+                                <g id="Temp_High" data-name="Temp High">
                                     <g>
                                         <path
-                                            d="M23,24c0,3.9-3.1,7-7,7s-7-3.1-7-7c0-2.3,1.1-4.4,3-5.7V5c0-2.2,1.8-4,4-4s4,1.8,4,4v13.3    C21.9,19.6,23,21.7,23,24z"
-                                            fill="#E92662" />
-                                    </g>
-                                    <g>
+                                            d="M14.863,13.4V4.939a2.929,2.929,0,0,0-.84-2.03,2.859,2.859,0,0,0-2.23-.82,2.948,2.948,0,0,0-2.66,3l.01,8.28a4.755,4.755,0,0,0,1.9,8.46,5.093,5.093,0,0,0,.95.09,4.759,4.759,0,0,0,4.76-4.75A4.684,4.684,0,0,0,14.863,13.4Zm-.48,6.66a3.783,3.783,0,0,1-3.15.78,3.7,3.7,0,0,1-2.92-2.98,3.745,3.745,0,0,1,1.43-3.69.962.962,0,0,0,.39-.77V5.089a1.968,1.968,0,0,1,1.73-2,.66.66,0,0,1,.14-.01,1.878,1.878,0,0,1,1.86,1.86V13.4a.962.962,0,0,0,.39.77,3.742,3.742,0,0,1,.13,5.89Z" />
                                         <path
-                                            d="M20,24c0,2.2-1.8,4-4,4s-4-1.8-4-4c0-1.9,1.3-3.4,3-3.9V13c0-0.5,0.5-1,1-1s1,0.5,1,1v7.1    C18.7,20.6,20,22.1,20,24z"
-                                            fill="#FFC10A" />
-                                    </g>
-                                    <g>
-                                        <path d="M10,17H6c-0.6,0-1-0.4-1-1s0.4-1,1-1h4c0.6,0,1,0.4,1,1S10.6,17,10,17z"
-                                            fill="#FFC10A" />
+                                            d="M13.893,17.169a1.89,1.89,0,0,1-3.78,0,1.858,1.858,0,0,1,1.39-1.81V5.4a.5.5,0,0,1,1,0v9.96A1.869,1.869,0,0,1,13.893,17.169Z" />
                                     </g>
                                 </g>
-                                <g id="Layer_4" />
-                                <g id="Layer_5" />
-                                <g id="Layer_6" />
-                                <g id="Layer_7" />
-                                <g id="Layer_8" />
-                                <g id="Layer_9" />
-                                <g id="Layer_10" />
-                                <g id="Layer_11" />
-                                <g id="Layer_12" />
-                                <g id="Layer_13" />
-                                <g id="Layer_14" />
-                                <g id="Layer_15" />
-                                <g id="Layer_16" />
-                                <g id="Layer_17" />
-                                <g id="Layer_18" />
-                                <g id="Layer_19" />
-                                <g id="Layer_20" />
-                                <g id="Layer_21" />
-                                <g id="Layer_22" />
-                                <g id="Layer_23" />
-                                <g id="Layer_24" />
-                                <g id="Layer_25" />
-                                <g id="Wearher" />
                             </svg>
                         </div>
                         <div class="text pl-3">
-                            <p><span class="title">Temperatura: </span>Min: <span
-                                    class="title"><?=$weatherData['main']['temp_min']?>° </span>Max: <span
-                                    class="title"><?=$weatherData['main']['temp_max']?>°
-                                </span></p>
+                            <p><span class="title">Temperatura: </span>Min: <span class="title" id="tempMin">
+                                </span>Max: <span class="title" id="tempMax">
+                                </span></p>Atual: <span class="title" id="tempAtual">
+                            </span>
                         </div>
                     </div>
                     <div class="dbox w-100 d-flex align-items-center">
@@ -211,8 +176,7 @@ echo var_dump($weatherData['weather'][0]['main']);
                             </svg>
                         </div>
                         <div class="text pl-3">
-                            <p><span class="title">Temperatura atual: </span> <span
-                                    class="title"><?=$weatherData['main']['temp']?>°</span>
+                            <p><span class="title">Umidade: </span> <span class="title" id="umidadeAtual"></span>
                         </div>
                     </div>
                     <div class="dbox w-100 d-flex align-items-center">

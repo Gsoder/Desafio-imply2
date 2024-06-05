@@ -1,5 +1,4 @@
 <?php
-
 namespace Imply\DesafioImply2\Classes;
 
 class getWeatherClass
@@ -13,36 +12,32 @@ class getWeatherClass
 
     public function getWeather($cidade)
     {
-        $curl = curl_init();
+        $url = "http://api.openweathermap.org/data/2.5/weather?q=" . urlencode($cidade) . "&appid=" . $this->apiKey . "&units=metric";
 
-        $url = "https://api.openweathermap.org/data/2.5/weather?q=" . urlencode($cidade) . "&appid=" . $this->apiKey . "&lang=pt_br&units=metric";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
 
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-        ]);
-
-        $response = curl_exec($curl);
-
-        if ($response === false) {
-            $error = curl_error($curl);
-            curl_close($curl);
-            throw new \Exception("cURL Error: $error");
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $error_msg = 'cURL Error: ' . curl_error($ch);
+            curl_close($ch);
+            throw new \Exception($error_msg);
         }
 
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        if ($httpCode !== 200) {
-            throw new \Exception("API Request Failed with HTTP Code $httpCode");
-        }
+        curl_close($ch);
 
         $data = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \Exception('JSON decode error: ' . json_last_error_msg());
+        }
+
+        if (isset($data['cod']) && $data['cod'] != 200) {
+            throw new \Exception('API error: ' . $data['message']);
+        }
 
         return $data;
-
-        
     }
 }
