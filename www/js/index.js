@@ -9,7 +9,7 @@ $(document).ready(function () {
   $('#getClima').submit(function (event) {
     event.preventDefault();
 
-
+    var email = $('#emailTxt').val == "" ? $('#emailTxt').val : null;
     var cidade = $('#cidades').val();
 
 
@@ -20,7 +20,8 @@ $(document).ready(function () {
 
 
     var formData = {
-      cidade: cidade
+      cidade: cidade,
+      email: email
     };
 
     console.log(formData);
@@ -31,13 +32,28 @@ $(document).ready(function () {
       data: formData,
       success: function (response) {
 
+        $("#Vento").html("");
+        $("#Temperatura").html("");
+
+        $("#Vento").append(`<span class="title" id="velocidadeVento">
+        </span>Kilometros por
+        hora`);
+
         $('#velocidadeVento').text(response.wind.speed + " ");
 
-        $('#tempMin').text(response.main.temp_min + " ");
-        $('#tempMax').text(response.main.temp_max + " ");
+        $("#Temperatura").append(` Min: <span class="title" id="tempMin">
+        </span>Max: <span class="title" id="tempMax">
+        </span></p>Atual: <span class="title" id="tempAtual">
+    </span>`);
 
-        $('#tempAtual').text(response.main.temp + " ");
-        $('#umidadeAtual').text(response.main.humidity + " ");
+        $('#tempMin').text(response.main.temp_min + "° ");
+        $('#tempMax').text(response.main.temp_max + "° ");
+
+        $('#tempAtual').text(response.main.temp + "° ");
+
+        $("#Umidade").append(`<span class="title" id="umidadeAtual"></span>`);
+
+        $('#umidadeAtual').text(response.main.humidity + "% ");
 
       },
       error: function (xhr, status, error) {

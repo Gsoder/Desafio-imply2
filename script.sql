@@ -20,5 +20,16 @@ CREATE TABLE IF NOT EXISTS Historico(
     FOREIGN KEY (ClimaID) REFERENCES Clima(ID)
 );
 
+INSERT INTO Clima(Temperatura, Umidade, Vento, Sensacao, Descricao) VALUES (18.1, 68, 20, -2, "Test");
+INSERT INTO Historico(DataHora, ClimaID, Cidade) VALUES ("2024-06-05 08:30:44", 1, "Santa Cruz do sul");
+
+SELECT c.Temperatura, c.Umidade, c.Vento, c.Sensacao, c.Descricao
+FROM Historico h
+INNER JOIN Clima c ON h.ClimaID = c.ID
+WHERE h.Cidade = "Santa Cruz do sul" AND h.DataHora >= DATE_SUB(NOW(), INTERVAL 1 HOUR);
 
 DROP DATABASE ClimaDB;
+
+INSERT INTO Historico(ClimaID, Cidade) VALUES (1, "Santa Cruz do sul")
+
+SELECT ID FROM Clima WHERE ID = LAST_INSERT_ID()

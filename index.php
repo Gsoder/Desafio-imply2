@@ -28,7 +28,6 @@ $controller->handleRequest();
 
     <section class="ftco-section">
         <div class="row container" style="margin: auto;">
-
             <div class="col-md-7 d-flex align-items-stretch">
                 <div class="contact-wrap w-100 p-md-5 p-4">
                     <h3 class="mb-4">Descubra o clima</h3>
@@ -65,8 +64,7 @@ $controller->handleRequest();
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <input type="submit" value="Send Message" class="btn btn-primary">
-                                <div class="submitting"></div>
+                                <input type="submit" value="Pesquisar clima" class="btn btn-primary botao-enviar">
                             </div>
                         </div>
                 </div>
@@ -100,9 +98,7 @@ $controller->handleRequest();
                             </svg>
                         </div>
                         <div class="text pl-3">
-                            <p><span class="title">Vento: </span><span class="title" id="velocidadeVento">
-                                </span>Kilometros por
-                                hora
+                            <p><span class="title">Vento: </span><span id="Vento"></span>
                             </p>
                         </div>
                     </div>
@@ -122,69 +118,30 @@ $controller->handleRequest();
                             </svg>
                         </div>
                         <div class="text pl-3">
-                            <p><span class="title">Temperatura: </span>Min: <span class="title" id="tempMin">
-                                </span>Max: <span class="title" id="tempMax">
-                                </span></p>Atual: <span class="title" id="tempAtual">
-                            </span>
+                            <p><span class="title">Temperatura:</span><span id="Temperatura"></span></p>
                         </div>
                     </div>
                     <div class="dbox w-100 d-flex align-items-center">
                         <div class="icon d-flex align-items-center justify-content-center">
-                            <svg width="800px" height="800px" viewBox="0 0 32 32" enable-background="new 0 0 32 32"
-                                version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="Layer_2" />
-                                <g id="Layer_3">
-                                    <g>
-                                        <path
-                                            d="M23,24c0,3.9-3.1,7-7,7s-7-3.1-7-7c0-2.3,1.1-4.4,3-5.7V5c0-2.2,1.8-4,4-4s4,1.8,4,4v13.3    C21.9,19.6,23,21.7,23,24z"
-                                            fill="#E92662" />
-                                    </g>
-                                    <g>
-                                        <path
-                                            d="M20,24c0,2.2-1.8,4-4,4s-4-1.8-4-4c0-1.9,1.3-3.4,3-3.9V13c0-0.5,0.5-1,1-1s1,0.5,1,1v7.1    C18.7,20.6,20,22.1,20,24z"
-                                            fill="#FFC10A" />
-                                    </g>
-                                    <g>
-                                        <path d="M10,17H6c-0.6,0-1-0.4-1-1s0.4-1,1-1h4c0.6,0,1,0.4,1,1S10.6,17,10,17z"
-                                            fill="#FFC10A" />
-                                    </g>
-                                </g>
-                                <g id="Layer_4" />
-                                <g id="Layer_5" />
-                                <g id="Layer_6" />
-                                <g id="Layer_7" />
-                                <g id="Layer_8" />
-                                <g id="Layer_9" />
-                                <g id="Layer_10" />
-                                <g id="Layer_11" />
-                                <g id="Layer_12" />
-                                <g id="Layer_13" />
-                                <g id="Layer_14" />
-                                <g id="Layer_15" />
-                                <g id="Layer_16" />
-                                <g id="Layer_17" />
-                                <g id="Layer_18" />
-                                <g id="Layer_19" />
-                                <g id="Layer_20" />
-                                <g id="Layer_21" />
-                                <g id="Layer_22" />
-                                <g id="Layer_23" />
-                                <g id="Layer_24" />
-                                <g id="Layer_25" />
-                                <g id="Wearher" />
+                            <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 21.5C16.1012 21.5 19.5 18.4372 19.5 14.5714C19.5 12.1555 18.2672 9.71249 16.8732 7.70906C15.4698 5.69214 13.8515 4.04821 12.9778 3.21778C12.4263 2.69364 11.5737 2.69364 11.0222 3.21779C10.1485 4.04821 8.53016 5.69214 7.1268 7.70906C5.73282 9.71249 4.5 12.1555 4.5 14.5714C4.5 18.4372 7.8988 21.5 12 21.5Z"
+                                    stroke="#222222" />
+                                <path
+                                    d="M12 18C11.4747 18 10.9546 17.8965 10.4693 17.6955C9.98396 17.4945 9.54301 17.1999 9.17157 16.8284C8.80014 16.457 8.5055 16.016 8.30448 15.5307C8.10346 15.0454 8 14.5253 8 14"
+                                    stroke="#222222" stroke-linecap="round" />
                             </svg>
                         </div>
                         <div class="text pl-3">
-                            <p><span class="title">Umidade: </span> <span class="title" id="umidadeAtual"></span>
+                            <p id="Umidade"><span class="title">Umidade: </span>
                         </div>
                     </div>
                     <div class="dbox w-100 d-flex align-items-center">
                         <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="fa fa-globe"></span>
                         </div>
                         <div class="text pl-3">
-                            <p><span>Website</span> <a href="#">yoursite.com</a></p>
+                            <p><span class="title">Descrição: </span> </p>
                         </div>
                     </div>
                 </div>

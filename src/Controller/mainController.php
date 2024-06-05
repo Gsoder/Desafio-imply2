@@ -28,7 +28,8 @@ class mainController
     private function getWeather()
 {
     try {
-        $cidade = $_POST['cidade'] ?? '';
+        $cidade = $_POST['cidade'] ?: '';
+        $email = $_POST['email'] ?: null;
 
         if (empty($cidade)) {
             throw new \Exception('Cidade não fornecida');
@@ -45,7 +46,6 @@ class mainController
         $result = $stmt->fetch();
 
         if ($result) {
-            // Dados encontrados no banco de dados, retornar esses dados
             $data = [
                 'temperatura' => $result['Temperatura'],
                 'umidade' => $result['Umidade'],
@@ -54,16 +54,28 @@ class mainController
                 'descricao' => $result['Descricao']
             ];
         } else {
-            // Dados não encontrados no banco de dados, chamar a API externa
             $weather = new getWeatherClass($this->apiKey);
             $data = $weather->getWeather($cidade);
-
-            // Salvar os dados no banco de dados
-            $stmt = $pdo->prepare("INSERT INTO Historico (ClimaID, Cidade) VALUES (:climaID, :cidade)");
-            $stmt->bindParam(':climaID', $data['climaID']); 
-            $stmt->bindParam(':cidade', $cidade);
+/*
+            $stmt = $pdo->prepare("INSERT INTO Clima(Temperatura, Umidade, Vento, Sensacao, Descricao) VALUES (:termperatura, :umidade, :vento, :sensacao, 'test');");
+            
+            $stmt->bindParam(':termperatura', $data['main']['temp']); 
+            $stmt->bindParam(':umidade', $data['main']['humidity']); 
+            $stmt->bindParam(':vento', $data['wind']['speed']); 
+            $stmt->bindParam(':sensacao', $data['main']['feels_like']); 
             $stmt->execute();
 
+            $id = $pdo->prepare("SELECT ID FROM Clima WHERE ID = LAST_INSERT_ID()");
+            $id->execute();
+         
+
+            $stmt = $pdo->prepare("INSERT INTO Historico(ClimaID, Cidade) VALUES (:idCLima, :cidade);");
+            
+            $stmt->bindParam(':idCLima', $id['ID']); 
+            $stmt->bindParam(':cidade', $cidade); 
+            $stmt->execute();
+
+*/
         }
 
         $this->sendResponse($data);
