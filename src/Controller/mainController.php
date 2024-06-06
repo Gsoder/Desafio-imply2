@@ -37,7 +37,7 @@ class mainController
 
         $conexao = new dbClass();
         $pdo = $conexao->conectar();
-        $stmt = $pdo->prepare("SELECT c.Temperatura, c.Umidade, c.Vento, c.Sensacao, c.Descricao
+        $stmt = $pdo->prepare("SELECT c.Temperatura, c.Umidade, c.Vento, c.Sensacao, c.Descricao, c.Min, c.Max, c.Icon
                                FROM Historico h
                                INNER JOIN Clima c ON h.ClimaID = c.ID
                                WHERE h.Cidade = :cidade AND h.DataHora >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
@@ -47,35 +47,44 @@ class mainController
 
         if ($result) {
             $data = [
-                'temperatura' => $result['Temperatura'],
-                'umidade' => $result['Umidade'],
-                'vento' => $result['Vento'],
-                'sensacao' => $result['Sensacao'],
-                'descricao' => $result['Descricao']
+                'main' => [
+                    'temp' => $result['Temperatura'],
+                    'humidity' => $result['Umidade'],
+                    'feels_like' => $result['Sensacao'],
+                    'temp_min' => $result['Min'],
+                    'temp_max' => $result['Max']
+                ],
+                'wind' => [
+                    'speed' => $result['Vento']
+                ],
+                'weather' => [
+                    [
+                        'description' => $result['Descricao'],
+                        "icon" => $result['Icon']
+                    ]
+                ]
             ];
         } else {
             $weather = new getWeatherClass($this->apiKey);
             $data = $weather->getWeather($cidade);
-/*
-            $stmt = $pdo->prepare("INSERT INTO Clima(Temperatura, Umidade, Vento, Sensacao, Descricao) VALUES (:termperatura, :umidade, :vento, :sensacao, 'test');");
-            
-            $stmt->bindParam(':termperatura', $data['main']['temp']); 
-            $stmt->bindParam(':umidade', $data['main']['humidity']); 
-            $stmt->bindParam(':vento', $data['wind']['speed']); 
-            $stmt->bindParam(':sensacao', $data['main']['feels_like']); 
+
+            $stmt = $pdo->prepare("INSERT INTO Clima (Temperatura, Umidade, Vento, Sensacao, Descricao, Min, Max, Icon) VALUES (:temperatura, :umidade, :vento, :sensacao, :descricao, :min, :max, :icon);");
+            $stmt->bindParam(':temperatura', $data['main']['temp']);
+            $stmt->bindParam(':umidade', $data['main']['humidity']);
+            $stmt->bindParam(':vento', $data['wind']['speed']);
+            $stmt->bindParam(':sensacao', $data['main']['feels_like']);
+            $stmt->bindParam(':min', $data['main']['temp_min']);
+            $stmt->bindParam(':max', $data['main']['temp_max']);
+            $stmt->bindParam(':descricao', $data['weather'][0]['description']);
+            $stmt->bindParam(':icon', $data['weather'][0]['icon']);
             $stmt->execute();
 
-            $id = $pdo->prepare("SELECT ID FROM Clima WHERE ID = LAST_INSERT_ID()");
-            $id->execute();
-         
+            $id = $pdo->lastInsertId();
 
-            $stmt = $pdo->prepare("INSERT INTO Historico(ClimaID, Cidade) VALUES (:idCLima, :cidade);");
-            
-            $stmt->bindParam(':idCLima', $id['ID']); 
-            $stmt->bindParam(':cidade', $cidade); 
+            $stmt = $pdo->prepare("INSERT INTO Historico (ClimaID, Cidade) VALUES (:idClima, :cidade);");
+            $stmt->bindParam(':idClima', $id);
+            $stmt->bindParam(':cidade', $cidade);
             $stmt->execute();
-
-*/
         }
 
         $this->sendResponse($data);

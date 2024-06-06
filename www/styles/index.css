@@ -148,3 +148,9 @@ h5,
 	position: relative;
 	margin-bottom: 20px;
 }
+
+#weatherIcon {
+
+	width: 500%;
+
+}

@@ -26,6 +26,8 @@ $controller->handleRequest();
 
 <body>
 
+    <!--<img src="https://openweathermap.org/img/wn/04d@2x.png">-->
+
     <section class="ftco-section">
         <div class="row container" style="margin: auto;">
             <div class="col-md-7 d-flex align-items-stretch">
@@ -139,9 +141,11 @@ $controller->handleRequest();
                     </div>
                     <div class="dbox w-100 d-flex align-items-center">
                         <div class="icon d-flex align-items-center justify-content-center">
+                            <img id="weatherIcon" src="https://openweathermap.org/img/wn/10d@2x.png" alt="Weather Icon">
                         </div>
+
                         <div class="text pl-3">
-                            <p><span class="title">Descrição: </span> </p>
+                            <p><span class="title">Descrição: </span><span id="Descricao"></span> </p>
                         </div>
                     </div>
                 </div>

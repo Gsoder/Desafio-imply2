@@ -9,7 +9,10 @@ CREATE TABLE IF NOT EXISTS Clima(
     Umidade INT NOT NULL,
     Vento FLOAT NOT NULL,
     Sensacao FLOAT NOT NULL,
-    Descricao VARCHAR(320)
+    Descricao VARCHAR(320),
+    Min FLOAT NOT NULL,
+    Max FLOAT NOT NULL,
+    Icon VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Historico(
@@ -33,3 +36,11 @@ DROP DATABASE ClimaDB;
 INSERT INTO Historico(ClimaID, Cidade) VALUES (1, "Santa Cruz do sul")
 
 SELECT ID FROM Clima WHERE ID = LAST_INSERT_ID()
+
+UPDATE `Historico` SET `DataHora` = "2024-06-05 08:30:44";
+UPDATE Clima SET `Umidade` = 10000;
+
+DELETE FROM `Historico`;
+
+DELETE FROM  Clima;
+

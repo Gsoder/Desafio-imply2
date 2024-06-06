@@ -55,6 +55,13 @@ $(document).ready(function () {
 
         $('#umidadeAtual').text(response.main.humidity + "% ");
 
+        $("#Descricao").append(`<span class="title" id="DescricaoAtual"></span>`);
+
+        $('#DescricaoAtual').text(response.weather[0].description);
+
+        var iconUrl = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png";
+        $('#weatherIcon').attr('src', iconUrl);
+
       },
       error: function (xhr, status, error) {
         console.error('Erro ao enviar a mensagem: ', status, error);
