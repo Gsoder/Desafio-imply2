@@ -27,16 +27,9 @@ class getWeatherClass
             throw new \Exception($error_msg);
         }
 
-        //$urlIcon = "https://openweathermap.org/img/wn/" . $response['weather'][0]['icon'] . "@2x.png";
-
-        //curl_setopt($ch, CURLOPT_URL, $urlIcon);
-
-        //$responseIcon = curl_exec($ch);
-
         unset($ch);
 
         $data = json_decode($response, true);
-        //$dataIcon = json_decode($responseIcon, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \Exception('JSON decode error: ' . json_last_error_msg());
         }
@@ -45,7 +38,6 @@ class getWeatherClass
             throw new \Exception('API error: ' . $data['message']);
         }
 
-        //$data = Array($data, $dataIcon);
 
         return $data;
     }

@@ -1,9 +1,15 @@
 <?php
 
+
 namespace Imply\DesafioImply2\Controller;
 
 use Imply\DesafioImply2\Classes\getWeatherClass;
 use Imply\DesafioImply2\Classes\dbClass;
+use Imply\DesafioImply2\Classes\sendEmailClass;
+use Imply\DesafioImply2\Model\climaModel;
+use Imply\DesafioImply2\Model\historicoModel;
+
+
 
 class mainController
 {
@@ -28,9 +34,9 @@ class mainController
     private function getWeather()
 {
     try {
+        
         $cidade = $_POST['cidade'] ?: '';
-        $email = $_POST['email'] ?: null;
-
+        
         if (empty($cidade)) {
             throw new \Exception('Cidade não fornecida');
         }
@@ -45,49 +51,65 @@ class mainController
         $stmt->execute();
         $result = $stmt->fetch();
 
+        $data = new historicoModel();
+        $clima = new climaModel();
+
         if ($result) {
-            $data = [
-                'main' => [
-                    'temp' => $result['Temperatura'],
-                    'humidity' => $result['Umidade'],
-                    'feels_like' => $result['Sensacao'],
-                    'temp_min' => $result['Min'],
-                    'temp_max' => $result['Max']
-                ],
-                'wind' => [
-                    'speed' => $result['Vento']
-                ],
-                'weather' => [
-                    [
-                        'description' => $result['Descricao'],
-                        "icon" => $result['Icon']
-                    ]
-                ]
-            ];
+            
+            $clima->setTemperatura($result['Temperatura']);
+            $clima->setMin($result['Min']);
+            $clima->setMax($result['Max']);
+            $clima->setVento($result['Vento'] * 3.6);
+            $clima->setUmidade($result['Umidade']);
+            $clima->setIcon($result['Icon']);
+            $clima->setDescricao($result['Descricao']);
+            $clima->setSensasao($result['Sensacao']);
+
+            $data->setClimaID($clima);
+            $data->setCidade($cidade);
+
+            //var_dump($data);
+
         } else {
             $weather = new getWeatherClass($this->apiKey);
-            $data = $weather->getWeather($cidade);
+            $apiResponse = $weather->getWeather($cidade);
+
+            $clima->setTemperatura($apiResponse['main']['temp']);
+            $clima->setMin($apiResponse['main']['temp_min']);
+            $clima->setMax($apiResponse['main']['temp_max']);
+            $clima->setVento($apiResponse['wind']['speed'] * 3.6);
+            $clima->setUmidade($apiResponse['main']['humidity']);
+            $clima->setIcon($apiResponse['weather'][0]['icon']);
+            $clima->setDescricao($apiResponse['weather'][0]['description']);
+            $clima->setSensasao($apiResponse['main']['feels_like']);
+
 
             $stmt = $pdo->prepare("INSERT INTO Clima (Temperatura, Umidade, Vento, Sensacao, Descricao, Min, Max, Icon) VALUES (:temperatura, :umidade, :vento, :sensacao, :descricao, :min, :max, :icon);");
-            $stmt->bindParam(':temperatura', $data['main']['temp']);
-            $stmt->bindParam(':umidade', $data['main']['humidity']);
-            $stmt->bindParam(':vento', $data['wind']['speed']);
-            $stmt->bindParam(':sensacao', $data['main']['feels_like']);
-            $stmt->bindParam(':min', $data['main']['temp_min']);
-            $stmt->bindParam(':max', $data['main']['temp_max']);
-            $stmt->bindParam(':descricao', $data['weather'][0]['description']);
-            $stmt->bindParam(':icon', $data['weather'][0]['icon']);
+            $stmt->bindParam(':temperatura', $clima->getTemperatura());
+            $stmt->bindParam(':umidade', $clima->getUmidade());
+            $stmt->bindParam(':vento', $clima->getVento());
+            $stmt->bindParam(':sensacao', $clima->getSensasao());
+            $stmt->bindParam(':descricao', $clima->getDescricao());
+            $stmt->bindParam(':min', $clima->getMin());
+            $stmt->bindParam(':max', $clima->getMax());
+            $stmt->bindParam(':icon', $clima->getIcon());
             $stmt->execute();
-
+            
             $id = $pdo->lastInsertId();
+            
 
+            $data->setClimaID($clima);
+            $data->setCidade($cidade);
+            
             $stmt = $pdo->prepare("INSERT INTO Historico (ClimaID, Cidade) VALUES (:idClima, :cidade);");
             $stmt->bindParam(':idClima', $id);
-            $stmt->bindParam(':cidade', $cidade);
+            $stmt->bindParam(':cidade', $data->getCidade());
             $stmt->execute();
+        
         }
 
-        $this->sendResponse($data);
+
+        $this->sendResponse($data->toArray());
     } catch (\Exception $e) {
         $this->sendResponse(['error' => $e->getMessage()], 500);
     }
@@ -101,6 +123,7 @@ class mainController
         echo json_encode($data);
         exit;
     }
+
 }
 
 ?>

@@ -1,5 +1,11 @@
 {
-  "states": [
+  "states": [{
+      "uf": "TS",
+      "name": "Test",
+      "cities": [
+        "Test"
+      ]
+    },
     {
       "uf": "AC",
       "name": "Acre",

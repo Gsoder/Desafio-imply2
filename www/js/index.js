@@ -1,4 +1,6 @@
 const urlDoArquivoJSON = '../www/json/brazil-cities-states-en.json';
+const AlertErr = $("#AlertErr");
+const AlertTxt = $("#ErrText");
 
 $(document).ready(function () {
   carregarJSON(urlDoArquivoJSON, (data) => {
@@ -32,6 +34,8 @@ $(document).ready(function () {
       data: formData,
       success: function (response) {
 
+        console.log(response);
+
         $("#Vento").html("");
         $("#Temperatura").html("");
 
@@ -39,47 +43,58 @@ $(document).ready(function () {
         </span>Kilometros por
         hora`);
 
-        $('#velocidadeVento').text(response.wind.speed + " ");
+        $('#velocidadeVento').text(parseFloat(response.clima.vento.toFixed(2)) + " ");
 
         $("#Temperatura").append(` Min: <span class="title" id="tempMin">
         </span>Max: <span class="title" id="tempMax">
         </span></p>Atual: <span class="title" id="tempAtual">
     </span>`);
 
-        $('#tempMin').text(response.main.temp_min + "° ");
-        $('#tempMax').text(response.main.temp_max + "° ");
+        $('#tempMin').text(response.clima.min + "° ");
+        $('#tempMax').text(response.clima.max + "° ");
 
-        $('#tempAtual').text(response.main.temp + "° ");
+        $('#tempAtual').text(response.clima.temperatura + "° ");
 
         $("#Umidade").append(`<span class="title" id="umidadeAtual"></span>`);
 
-        $('#umidadeAtual').text(response.main.humidity + "% ");
+        $('#umidadeAtual').text(response.clima.umidade + "% ");
 
         $("#Descricao").append(`<span class="title" id="DescricaoAtual"></span>`);
 
-        $('#DescricaoAtual').text(response.weather[0].description);
+        $('#DescricaoAtual').text(response.clima.descricao);
 
-        var iconUrl = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png";
+        var iconUrl = "https://openweathermap.org/img/wn/" + response.clima.icon + "@2x.png";
         $('#weatherIcon').attr('src', iconUrl);
 
       },
       error: function (xhr, status, error) {
         console.error('Erro ao enviar a mensagem: ', status, error);
         console.error('Resposta do servidor: ', xhr.responseText);
+
+        AlertErr.css('display', 'flex');
+        AlertTxt.text("Cidade inexistente");
+        setTimeout(() => {
+
+          AlertErr.css('display', 'none');
+
+        }, 5000);
+
       }
     });
   });
-
-
-
-
-
 });
 
 function carregarJSON(url, callback) {
   fetch(url)
     .then(response => {
       if (!response.ok) {
+        AlertErr.css('display', 'flex');
+        AlertTxt.text("Erro ao carregar o JSON");
+        setTimeout(() => {
+
+          AlertErr.css('display', 'none');
+
+        }, 5000);
         throw new Error('Erro ao carregar o JSON');
       }
       return response.json();
