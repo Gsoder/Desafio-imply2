@@ -1,6 +1,8 @@
 const urlDoArquivoJSON = '../www/json/brazil-cities-states-en.json';
 const AlertErr = $("#AlertErr");
-const AlertTxt = $("#ErrText");
+const AlertSucs = $("#AlertSucs");
+const ErrTxt = $("#ErrText");
+const SucsTxt = $("#SucsTxt");
 
 $(document).ready(function () {
   carregarJSON(urlDoArquivoJSON, (data) => {
@@ -9,14 +11,41 @@ $(document).ready(function () {
   });
 
   $('#getClima').submit(function (event) {
+    $("#botaoEnviar").attr("disabled", true);
+    $('#load').toggleClass('hidden');
+
     event.preventDefault();
 
-    var email = $('#emailTxt').val == "" ? $('#emailTxt').val : null;
-    var cidade = $('#cidades').val();
+    var email = $('#emailTxt').val() != "" ? $('#emailTxt').val() : null;
+    email = $('#flexCheckDefault').is(':checked') ? email : null;
+    var cidade = $('#cidades').val() != "" ? $('#cidades').val() : null;
+
+    if (email === null && $('#flexCheckDefault').is(':checked')) {
+      AlertErr.css('display', 'flex');
+      ErrTxt.text("Email não pode estar vazio");
+      setTimeout(() => {
+
+        AlertErr.css('display', 'none');
+
+      }, 5000);
+      $('#load').toggleClass('hidden');
+      $("#botaoEnviar").attr("disabled", false);
+      return;
+    }
+
+    console.log(email);
 
 
     if (!cidade) {
-      console.error('Por favor, selecione uma cidade.');
+      AlertErr.css('display', 'flex');
+      ErrTxt.text("Selecione uma cidade");
+      setTimeout(() => {
+
+        AlertErr.css('display', 'none');
+
+      }, 5000);
+      $('#load').toggleClass('hidden');
+      $("#botaoEnviar").attr("disabled", false);
       return;
     }
 
@@ -45,15 +74,15 @@ $(document).ready(function () {
 
         $('#velocidadeVento').text(parseFloat(response.clima.vento.toFixed(2)) + " ");
 
-        $("#Temperatura").append(` Min: <span class="title" id="tempMin">
-        </span>Max: <span class="title" id="tempMax">
-        </span></p>Atual: <span class="title" id="tempAtual">
-    </span>`);
+        $("#Temperatura").append(` <span>Min: <span class="title" id="tempMin">
+        </span></span><span>Max: <span class="title" id="tempMax">
+        </span></span><span>Atual: <span class="title" id="tempAtual">
+    </span></span></p>`);
 
-        $('#tempMin').text(response.clima.min + "° ");
-        $('#tempMax').text(response.clima.max + "° ");
+        $('#tempMin').text(response.clima.min + "°C ");
+        $('#tempMax').text(response.clima.max + "°C ");
 
-        $('#tempAtual').text(response.clima.temperatura + "° ");
+        $('#tempAtual').text(response.clima.temperatura + "°C ");
 
         $("#Umidade").append(`<span class="title" id="umidadeAtual"></span>`);
 
@@ -63,8 +92,23 @@ $(document).ready(function () {
 
         $('#DescricaoAtual').text(response.clima.descricao);
 
+        $("#Sensasao").append(`<span class="title" id="SensasaoAtual"></span>`);
+
+        $('#SensasaoAtual').text(response.clima.sensacao + "°C ");
+
         var iconUrl = "https://openweathermap.org/img/wn/" + response.clima.icon + "@2x.png";
         $('#weatherIcon').attr('src', iconUrl);
+
+        AlertSucs.css('display', 'flex');
+        SucsTxt.text("Cidade encontrada");
+        setTimeout(() => {
+
+          AlertSucs.css('display', 'none');
+
+        }, 5000);
+
+        $("#botaoEnviar").attr("disabled", false);
+        $('#load').toggleClass('hidden');
 
       },
       error: function (xhr, status, error) {
@@ -72,15 +116,23 @@ $(document).ready(function () {
         console.error('Resposta do servidor: ', xhr.responseText);
 
         AlertErr.css('display', 'flex');
-        AlertTxt.text("Cidade inexistente");
+        ErrTxt.text("Cidade inexistente");
         setTimeout(() => {
 
           AlertErr.css('display', 'none');
 
         }, 5000);
+        $("#Vento").html("");
+        $("#Temperatura").html("")
+        $("#Umidade").html("");
+        $("#Descricao").html("")
+        $("#Sensasao").html("");
+        $("#botaoEnviar").attr("disabled", false);
+        $('#load').toggleClass('hidden');
 
       }
     });
+
   });
 });
 
@@ -89,7 +141,7 @@ function carregarJSON(url, callback) {
     .then(response => {
       if (!response.ok) {
         AlertErr.css('display', 'flex');
-        AlertTxt.text("Erro ao carregar o JSON");
+        ErrTxt.text("Erro ao carregar o JSON");
         setTimeout(() => {
 
           AlertErr.css('display', 'none');
@@ -143,9 +195,5 @@ function getCidade(data) {
 
 function trocarDisplayEmail() {
   var emailTxt = $('#emailTxt');
-  if ($('#flexCheckDefault').is(':checked')) {
-    emailTxt.css('display', 'block');
-  } else {
-    emailTxt.css('display', 'none');
-  }
+  emailTxt.toggleClass('hidden');
 }

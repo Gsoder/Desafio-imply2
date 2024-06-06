@@ -32,10 +32,11 @@ class mainController
     }
 
     private function getWeather()
-{
+    {
     try {
         
         $cidade = $_POST['cidade'] ?: '';
+        $email = $_POST['email'] ?: null;
         
         if (empty($cidade)) {
             throw new \Exception('Cidade não fornecida');
@@ -108,12 +109,28 @@ class mainController
         
         }
 
+        if (empty($data)) {
+            throw new \Exception('Não foi possivel pegar os itens');
+        }
+
+        if(!empty($email)){
+            $respotaDoEmail = $this->sendEmail($data, $email);
+            if (strpos($respotaDoEmail, 'Erro:') !== false) {
+                throw new \Exception($respotaDoEmail);
+            }
+        }
 
         $this->sendResponse($data->toArray());
     } catch (\Exception $e) {
         $this->sendResponse(['error' => $e->getMessage()], 500);
     }
 }
+
+    private function sendEmail(historicoModel $hist, string $email)
+    {
+        $data = new sendEmailClass($hist, $email);
+        return $data->Send();
+    }
 
 
     private function sendResponse($data, $statusCode = 200)

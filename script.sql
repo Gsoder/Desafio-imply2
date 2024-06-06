@@ -23,6 +23,14 @@ CREATE TABLE IF NOT EXISTS Historico(
     FOREIGN KEY (ClimaID) REFERENCES Clima(ID)
 );
 
+UPDATE `Historico` SET `DataHora` = "2024-06-05 08:30:44";
+
+DELETE FROM `Historico`;
+
+DELETE FROM  Clima;
+
+
+
 INSERT INTO Clima(Temperatura, Umidade, Vento, Sensacao, Descricao) VALUES (18.1, 68, 20, -2, "Test");
 INSERT INTO Historico(DataHora, ClimaID, Cidade) VALUES ("2024-06-05 08:30:44", 1, "Santa Cruz do sul");
 
@@ -37,10 +45,8 @@ INSERT INTO Historico(ClimaID, Cidade) VALUES (1, "Santa Cruz do sul")
 
 SELECT ID FROM Clima WHERE ID = LAST_INSERT_ID()
 
-UPDATE `Historico` SET `DataHora` = "2024-06-05 08:30:44";
+
 UPDATE Clima SET `Umidade` = 10000;
 
-DELETE FROM `Historico`;
 
-DELETE FROM  Clima;
 

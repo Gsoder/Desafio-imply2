@@ -29,18 +29,6 @@ $controller->handleRequest();
 
 <body>
 
-
-    <div class="error end-0" id="AlertErr">
-        <div class="error__icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="2 2 22 22" height="24" fill="none"
-                style="margin-bottom: 5px;">
-                <path fill="#393a37"
-                    d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z">
-                </path>
-            </svg>
-        </div>
-        <div class="error__title" id="ErrText">lorem ipsum dolor sit amet</div>
-    </div>
     <section class="ftco-section">
         <div class="row container" style="margin: auto;">
             <div class="col-md-7 d-flex align-items-stretch">
@@ -73,13 +61,15 @@ $controller->handleRequest();
                                     Habilitar email
                                 </label>
                             </div>
-                            <input type="email" class="form-control email-form" id="emailTxt"
+                            <input type="email" class="form-control email-form hidden" id="emailTxt"
                                 placeholder="Insira seu email">
                         </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <input type="submit" value="Pesquisar clima" class="btn btn-primary botao-enviar">
+                        <div class="col-md-12  ">
+                            <div class="form-group d-flex test">
+                                <input type="submit" value="Pesquisar clima" class="btn btn-dark botao-enviar"
+                                    id="botaoEnviar">
+                                <div class="loading hidden" id="load"></div>
                             </div>
                         </div>
                 </div>
@@ -87,9 +77,32 @@ $controller->handleRequest();
             </div>
 
             <div class="col-md-5 d-flex align-items-stretch">
-                <div class="info-wrap bg-primary w-100 p-lg-5 p-4">
+                <div class="error" id="AlertErr">
+                    <div class="error__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="2 2 22 22" height="24" fill="none"
+                            style="margin-bottom: 5px;">
+                            <path fill="#393a37"
+                                d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="error__title" id="ErrText">lorem ipsum dolor sit amet</div>
+                </div>
+                <div class="success" id="AlertSucs">
+                    <div class="error__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="2 2 22 22" height="24" fill="none"
+                            style="margin-bottom: 5px;">
+                            <path fill="#393a37"
+                                d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="error__title" id="SucsTxt">lorem ipsum dolor sit amet</div>
+                </div>
+                <div class="info-wrap bg-dark w-100 p-lg-5 p-4">
+
                     <h3 class="mb-4 mt-md-4">Clima</h3>
-                    <div class="dbox w-100 d-flex align-items-start">
+                    <div class="dbox w-100 d-flex align-items-center">
                         <div class="icon d-flex align-items-center justify-content-center">
                             <svg width="800px" height="800px" viewBox="-4 -3 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +111,7 @@ $controller->handleRequest();
                                     stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </div>
-                        <div class="text pl-3">
+                        <div class="text pl-3 ">
                             <p><span class="title">Endereço:</span><span id="estadoTxt"
                                     style=" margin: 5px;"></span><span id="cidadeTxt"></span></p>
                         </div>
@@ -149,14 +162,14 @@ $controller->handleRequest();
                             </svg>
                         </div>
                         <div class="text pl-3">
-                            <p id="Umidade"><span class="title">Umidade: </span>
+                            <p id=""><span class="title">Umidade: </span> <span id="Umidade"></span> </p>
                         </div>
                     </div>
                     <div class="dbox w-100 d-flex align-items-center">
                         <div class="icon d-flex align-items-center justify-content-center">
                             <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
                                 xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px"
-                                viewBox="-100 -25 600 600" xml:space="preserve">
+                                viewBox="-90 -80 700 700" xml:space="preserve">
 
                                 <g>
                                     <path class="st0" d="M506.391,287.074c-3.578-10.219-13.484-22-20.734-29.047c-17.188-16.672-35.688-25-44.75-29.875
@@ -196,7 +209,7 @@ $controller->handleRequest();
                             </svg>
                         </div>
                         <div class="text pl-3">
-                            <p id="Umidade"><span class="title">Umidade: </span>
+                            <p id=""><span class="title">Sensação termica: </span> <span id="Sensasao"></span> </p>
                         </div>
                     </div>
                     <div class="dbox w-100 d-flex align-items-center">
