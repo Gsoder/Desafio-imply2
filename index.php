@@ -9,8 +9,6 @@ $controller = new mainController();
 $controller->handleRequest();
 
 
-
-
 ?>
 
 
@@ -64,6 +62,7 @@ $controller->handleRequest();
                             <input type="email" class="form-control email-form hidden" id="emailTxt"
                                 placeholder="Insira seu email">
                         </div>
+
 
                         <div class="col-md-12  ">
                             <div class="form-group d-flex test">
